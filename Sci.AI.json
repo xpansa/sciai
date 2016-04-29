@@ -1,0 +1,70 @@
+{
+    "files": [
+        {
+            "type": "server_js", 
+            "id": "93c7394e-93ca-4a44-8219-44e3267d77ad", 
+            "name": "CodeToTest"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "80ad45b5-3822-4256-a51f-92daeab21edd", 
+            "name": "Constants"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "6edf17d8-8d62-42b5-9c38-325315ed1121", 
+            "name": "Core"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "e8c5f665-2d21-4f44-b5ec-e4581ebd0104", 
+            "name": "Editor"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "213c5813-4a56-403f-8b29-d42485eff99a", 
+            "name": "Events"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "42b2f989-90e2-4803-8dae-9ec54460ac99", 
+            "name": "Export"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "10cf1670-65bf-416d-8fe1-98b2a9dab8c4", 
+            "name": "Ncbi"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "cf0401ae-b0fb-43c6-a09a-8d2f2f4c18f8", 
+            "name": "oldCode"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "128fb660-fc52-4d8f-88f3-df9fc1e2998a", 
+            "name": "Orcid"
+        }, 
+        {
+            "type": "html", 
+            "id": "d0226aba-34a0-47d9-9c56-d07532499332", 
+            "name": "Scripts"
+        }, 
+        {
+            "type": "html", 
+            "id": "e7eb5b86-ed1c-4980-9945-c3ba05720013", 
+            "name": "Sidebar"
+        }, 
+        {
+            "type": "html", 
+            "id": "c200aa65-cd07-4e4d-a16b-be0a67766aa5", 
+            "name": "Styles"
+        }, 
+        {
+            "type": "server_js", 
+            "id": "0748aebd-0be5-496f-a40b-cfa0ad9d6ab5", 
+            "name": "Uniprot"
+        }
+    ], 
+    "id": "15WHRDJdPKhBx7uY5ursWFihoGGsHTTTUsCA0gUZz4lirnrNIX2k0z5JW"
+}

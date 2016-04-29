@@ -1,0 +1,373 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+$(function() {
+	console.log("SciAI Loading");
+
+	/***** ACCORDION SETUP *****/
+	// display the first div by default
+	$("#accordion div").first().css('display', 'block');
+
+	var link = $("#accordion a");
+
+	link.on('click', function(e) {
+		e.preventDefault();
+		var a = $(this).attr("href");
+		if ($(this).hasClass('closed')) {
+			$(a).slideDown('fast')
+			$(this).removeClass('closed').addClass('opened');
+			$(this).children('.accordion-arrow').html('⤴');
+			$(".accordion-inner").not(a).slideUp('fast');
+			$(".accordion-arrow").not($(this).children('.accordion-arrow')).html('⤵');
+		} else {
+			$(a).slideUp('fast');
+			$(this).children('.accordion-arrow').html('⤵');
+			$(this).removeClass('opened').addClass('closed');
+		}
+	});
+	/***** END OF ACCORDION SETUP *****/
+
+
+	/***** BIND ACTIONS TO ALL BUTTONS *****/
+	$('#set-structure').click(setStructure);
+	$('#add-custom-tag').click(addCustomTag);
+	$('#element-types').change(runSearch);
+	$('#export-clear').click(exportClear);
+	$('#export-docx').click(exportDocx);
+	$('#export-pdf').click(exportPdf);
+	$('#export-sci').click(exportSci);
+	$('#update-tags').click(updateTags);
+	/***** END OF BIND ACTIONS TO ALL BUTTONS *****/
+
+});
+
+/***** FUNCTIONS *****/
+/*
+ * Update list of existing tags in the document
+ */
+function updateTags() {
+	google.script.run
+		.withSuccessHandler(
+			function(tags, element) {
+				element.disabled = false;
+				console.log(tags);
+				$('.show-tags').html('');
+				for(var i = 0; i < tags.length; i++) {
+					var content = '<p><i class="fa fa-2 fa-bookmark-o" aria-hidden="true"></i> <b>Type: ' 
+								+ tags[i].type + '</b></p>';
+					content += '<p><i class="fa fa-2 fa-file-text-o" aria-hidden="true"></i> <b>Text:</b> ' 
+								+ tags[i].text + '</p>';
+					var buttons = "<button class='delete-tag' data-id='" + tags[i].namedRangeId 
+								+ "'><i class='fa fa-3 fa-times' aria-hidden='true'></i></button>";
+					content = '<div class="tag-block"><div class="tag-block-left">' 
+								+ content + '</div><div class="tag-block-right">' 
+								+ buttons + '</div><hr class="clear"></div>';
+					$('.show-tags').append(content);
+				}
+				$('.delete-tag').unbind().click(deleteSelectedTag);
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.getAllTags();
+}
+
+/*
+ * Remove existing tag from the document
+ */
+function deleteSelectedTag(event) {
+	var name = $(event.currentTarget).attr('data-id');
+	var el = event.currentTarget;
+	google.script.run
+		.withSuccessHandler(
+			function(tags, element) {
+				element.disabled = false;
+				$(el).closest('.tag-block').remove();
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.removeTag(name);
+}
+
+/*
+ * Wrap text into the custom tag
+ */
+function addCustomTag() {
+	var type = $('#custom-tag').val();
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				element.disabled = false;
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.createNewTag(type);
+}
+
+/*
+ * Insert empty document structure for selected document type
+ */
+function setStructure() {
+	this.disabled = true;
+	removeErrors();
+	var documentType = $('#document-types').val();
+	if(documentType == 'select') {
+		showError('Please, select type of document', '#document-types');
+		this.disabled = false;
+		return false;
+	}
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				element.disabled = false;
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, '#document-types');
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.insertDocumentStructure(documentType);
+}
+
+/*
+ * Runs a server-side function to search the user-selected text and update
+ * the sidebar UI with the resulting text.
+ */
+function runSearch() {
+	console.log("Searching...");
+	this.disabled = true;
+	var elementType = $('#element-types').val();
+	if(elementType == 'select') {
+		showError('Please, select type of document', '#element-types');
+		this.disabled = false;
+		return false;
+	}
+	$('#error').remove();
+	google.script.run
+		.withSuccessHandler(
+			function(searchResults, element) {
+				element.disabled = false;
+				showResults(searchResults);
+				$('#element-types').val('select');
+				$('.wrap').unbind().click(insertSelectedResult);
+			})
+		.withFailureHandler(
+		function(msg, element) {
+				showError(msg, 'element-types');
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.searchTerm(elementType);
+}
+
+/*
+ * Insert in document search result that user click on
+ */ 
+function insertSelectedResult(event) {
+	console.log("Clicked on " + event.currentTarget.id);
+	var id = $(event.currentTarget).attr('data-id');
+	var type = $(event.currentTarget).attr('data-type');
+
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				$('#search-results').empty();
+				element.disabled = false;
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.createNewTag(type, id);
+}
+
+/*
+ * Show search results in the sidebar
+ */
+function showResults(results) {
+	$('#search-results').empty();
+	if (results.length > 0) {
+		console.log("Number of results: " + results.length);
+		for (var i = 0, j = results.length; i < j; i++) {
+			var id = results[i]['id'];
+			var type = results[i]['type'];
+			var header = '<h3 class="inline">' + splitByWords(results[i]['name'], 40) 
+				+ '<p class="inline">' + type + '</p></h3>';
+			var content = '<p class="no-margin">' + splitByWords(results[i]['desc'], 200) + '</p>';
+			var button = '<button class="blue wrap" data-id="' + id 
+				+ '" data-type="' + type + '">Wrap</button>'
+				+ '<a class="margin-left-15 button white" href="' 
+				+ results[i]['url'] + '" target="_blank">Open</a>'
+			$('#search-results').append('<div id="' + id + '"></div');
+			$('#' + id).append(header, content, button);
+			if (i !== j - 1) {
+				$('#' + id).append('<hr class="clear">');
+			}
+		}
+	} else {
+		console.log('Nothing found!');
+		$('#search-results').append('<p>Sorry, but there is no results...</p>');
+	}
+}
+
+/*
+ * Split string by words (spaces) with setted result length
+ */
+function splitByWords(str, len) {
+	if (str.length <= len) {
+		return str;
+	}
+	var strArr = str.split(' ');
+	var result = strArr[0];
+	var i = 0;
+
+	for(var i = 1; i < strArr.length; i++) {
+		if (result.length < len) {
+			result = result + ' ' + strArr[i];
+		}
+		else {
+			break;
+		}
+	}
+
+	result += '...';
+	return result;
+}
+
+/*
+ * Run server-side export script to DOCX format
+ */ 
+function exportDocx(){
+	toggleLoader();
+	this.disabled = true;
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withUserObject(this)
+		.exportDocx();
+}
+
+/*
+ * Run server-side export script to PDF format
+ */ 
+function exportPdf(){
+	toggleLoader();
+	this.disabled = true;
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withUserObject(this)
+		.exportPdf();
+}
+
+/*
+ * Run server-side export script to clear (without any tags) format
+ */ 
+function exportClear(){
+	toggleLoader();
+	this.disabled = true;
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withUserObject(this)
+		.exportClear();
+}
+
+/*
+ * Run server-side export script to SCI format
+ */ 
+function exportSci(){
+	toggleLoader();
+	this.disabled = true;
+	google.script.run
+		.withSuccessHandler(
+			function(processedText, element) {
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+				toggleLoader();
+			})
+		.withUserObject(this)
+		.exportSci();
+}
+
+/*
+ * Show or hide loader
+ */
+function toggleLoader() {
+	var state = $(".loader-wrapper").css('display');
+	if(state == 'none') {
+		// show loader
+		$(".loader-wrapper").css("display","block");
+		$("body").addClass("body_with_opacity");
+	} else {
+		// hide loader
+		$(".loader-wrapper").css("display","none");
+		$("body").removeClass("body_with_opacity");
+	}
+}
+
+/*
+ * Inserts a div that contains an error message after a given element.
+ *
+ * @param msg The error message to display.
+ * @param element The element after which to display the error.
+ */
+function showError(msg, element) {
+	var div = $('<div id="error" class="error">' + msg + '</div>');
+	$(element).after(div);
+}
+
+/*
+ * Remove all errors
+ */
+function removeErrors() {
+	$('.error').remove();
+}
+/***** END OF FUNCTIONS *****/
+</script>
