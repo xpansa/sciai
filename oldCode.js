@@ -1,4 +1,55 @@
 /* 
+** Test function, can be used as example
+*/
+function unusedInsertTags() {
+  // do insert tags instead of NamedRanges
+  var documentProperties = PropertiesService.getDocumentProperties();
+  var data = documentProperties.getProperties();
+  for (var key in data) {
+    Logger.log('Key: %s, Value: %s', key, data[key]);
+    var propertyValue = JSON.parse(data[key]);
+    Logger.log(typeof propertyValue);
+    var namedRange = getNamedRangeById(key);
+    // if not found - skip iteration
+    if(!namedRange)
+      continue;
+    var elements = namedRange.getRange().getRangeElements();
+    
+    // search for first and last text elements
+    var i = 0;
+    firstElement = elements[0];
+    lastElement = elements[elements.length - 1];
+    while(!firstElement.getElement().editAsText && i < elements.length) {
+      i++;
+      firstElement = elements[i];
+    }
+    i = elements.length - 1;
+    while(!lastElement.getElement().editAsText && i >= 0) {
+      i--;
+      lastElement = elements[i];
+    }
+    
+    // insert tags
+    var text = lastElement.getElement().editAsText();
+    if (lastElement.isPartial()) {
+      var str = text.getText().substr(lastElement.getStartOffset(), lastElement.getEndOffsetInclusive() - lastElement.getStartOffset() + 1);
+      text.insertText(lastElement.getEndOffsetInclusive() + 1, '</' + propertyValue.type + '>');
+    } else {
+      text.appendText('</' + propertyValue.type + '>');
+    }
+    
+    var text = firstElement.getElement().editAsText();
+    if (firstElement.isPartial()) {
+      var str = text.getText().substr(firstElement.getStartOffset(), firstElement.getEndOffsetInclusive() - firstElement.getStartOffset() + 1);
+      text.insertText(firstElement.getStartOffset(), '<' + propertyValue.type + ' id=' + propertyValue.dataId + '>');
+    } else {
+      text.insertText(0, '<' + propertyValue.type + ' id=' + propertyValue.dataId + '>');
+    }    
+  }
+}
+
+
+/* 
 * Check if range with such name already exists 
 * @rangeName - name of the NamedRange to search
 */
@@ -380,7 +431,7 @@ function getTextFromRangeElement(rangeElement) {
 }
 
 
-
+/*=========================================================================*/
 /* FROM HTML FILES */
 function makeTerm() {
   this.disabled = true;

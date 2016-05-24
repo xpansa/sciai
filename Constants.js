@@ -8,7 +8,7 @@
 /*
 * Get styles for the selected element.
 * This function provide correct styles for element in case of using 
-* highlight features
+* highlight feature
 * @param {string} type Type of element that should be highlighted
 */
 function getStyles(type) {

@@ -1,5 +1,6 @@
-
-
+/* 
+* Get all existing in current document tags 
+*/
 function getAllTags() {
   var documentProperties = PropertiesService.getDocumentProperties();
   var data = documentProperties.getProperties();
@@ -13,7 +14,9 @@ function getAllTags() {
   return results;
 }
 
-
+/* 
+* Get text from NamedRange
+*/
 function getNamedRangeText(id) {
   var namedRange = getNamedRangeById(id);
   if(!namedRange)
@@ -45,7 +48,7 @@ function getNamedRangeText(id) {
 }
 
 /*
-** Create a new tag: create a NamedRange element and write a new DocumentProperty
+* Create a new tag: create a NamedRange element and write a new DocumentProperty
 */
 function createNewTag(type, id) {
   // check if search result or custom tag
@@ -104,61 +107,8 @@ function highlightNamedRange(id, type) {
    }  
 }
 
-
 /* 
-** Test function, can be used as example
-*/
-function unusedInsertTags() {
-  // do insert tags instead of NamedRanges
-  var documentProperties = PropertiesService.getDocumentProperties();
-  var data = documentProperties.getProperties();
-  for (var key in data) {
-    Logger.log('Key: %s, Value: %s', key, data[key]);
-    var propertyValue = JSON.parse(data[key]);
-    Logger.log(typeof propertyValue);
-    var namedRange = getNamedRangeById(key);
-    // if not found - skip iteration
-    if(!namedRange)
-      continue;
-    var elements = namedRange.getRange().getRangeElements();
-    
-    // search for first and last text elements
-    var i = 0;
-    firstElement = elements[0];
-    lastElement = elements[elements.length - 1];
-    while(!firstElement.getElement().editAsText && i < elements.length) {
-      i++;
-      firstElement = elements[i];
-    }
-    i = elements.length - 1;
-    while(!lastElement.getElement().editAsText && i >= 0) {
-      i--;
-      lastElement = elements[i];
-    }
-    
-    // insert tags
-    var text = lastElement.getElement().editAsText();
-    if (lastElement.isPartial()) {
-      var str = text.getText().substr(lastElement.getStartOffset(), lastElement.getEndOffsetInclusive() - lastElement.getStartOffset() + 1);
-      text.insertText(lastElement.getEndOffsetInclusive() + 1, '</' + propertyValue.type + '>');
-    } else {
-      text.appendText('</' + propertyValue.type + '>');
-    }
-    
-    var text = firstElement.getElement().editAsText();
-    if (firstElement.isPartial()) {
-      var str = text.getText().substr(firstElement.getStartOffset(), firstElement.getEndOffsetInclusive() - firstElement.getStartOffset() + 1);
-      text.insertText(firstElement.getStartOffset(), '<' + propertyValue.type + ' id=' + propertyValue.dataId + '>');
-    } else {
-      text.insertText(0, '<' + propertyValue.type + ' id=' + propertyValue.dataId + '>');
-    }    
-  }
-}
-
-
-
-/* 
-** Get NamedRange by the ID 
+* Get NamedRange by the ID 
 */
 function getNamedRangeById(rangeId) { 
   var doc = DocumentApp.getActiveDocument();
@@ -173,7 +123,7 @@ function getNamedRangeById(rangeId) {
 }
 
 /*
-** Delete all DocumentProperties
+* Delete all DocumentProperties
 */
 function removeAllProperties() {
   var documentProperties = PropertiesService.getDocumentProperties();
@@ -181,7 +131,7 @@ function removeAllProperties() {
 }
 
 /*
-** Remove property by the name
+* Remove property by the name
 */
 function removeTag(name) {
   var content = JSON.parse(getPropertyValue(name));
@@ -190,6 +140,9 @@ function removeTag(name) {
   removeProperty(name);
 }
 
+/* 
+* Remove NamedRange by ID 
+*/
 function removeNamedRange(id) {
   var namedRange = getNamedRangeById(id);
   namedRange.remove();
@@ -197,19 +150,17 @@ function removeNamedRange(id) {
 
 
 /*
-** Form property content
+* Form property content
 */
 function formPropertyContent(namedRangeId, type, dataId) {
   var content = {namedRangeId: namedRangeId, type: type, dataId: dataId};
   return content;
 }
 
-
-
 /* 
-** Create a new NamedRange
-** @param {string} name The name for a new NamedRange 
-** @param {Range} elements The elements to be added into a new NamedRange
+* Create a new NamedRange
+* @param {string} name The name for a new NamedRange 
+* @param {Range} elements The elements to be added into a new NamedRange
 */
 function createRange(name, elements) {
   Logger.log('Creating a new range with the name ' + name);
@@ -219,11 +170,8 @@ function createRange(name, elements) {
   return doc.addNamedRange(name, rangeBuilder.build()).getId(); 
 }
 
-
-
-
 /*
-** Print all properties to console (useful for testing)
+* Print all properties to console (useful for testing)
 */
 function printAllPropertiesToConsole() {
   var documentProperties = PropertiesService.getDocumentProperties();
@@ -234,7 +182,7 @@ function printAllPropertiesToConsole() {
 }
 
 /*
-** Print all properties to console (useful for testing)
+* Print all properties to console (useful for testing)
 */
 function printAllNamedRangesToConsole() {
   //var doc = DocumentApp.getActiveDocument();
@@ -245,10 +193,8 @@ function printAllNamedRangesToConsole() {
   }
 }
 
-
-
 /*
-** Remove all NamedRange
+* Remove all NamedRange
 */
 function removeAllNamedRanges() {
   var doc = DocumentApp.getActiveDocument();
@@ -258,10 +204,8 @@ function removeAllNamedRanges() {
   }
 }
 
-
-
 /*
-** Get all NamedRanges
+* Get all NamedRanges
 */
 function getAllNamedRanges() {
   var doc = DocumentApp.getActiveDocument();
@@ -272,7 +216,7 @@ function getAllNamedRanges() {
 }
 
 /*
-** Get property by key
+* Get property by key
 */
 function getPropertyValue(key) {
   var documentProperties = PropertiesService.getDocumentProperties();
@@ -281,7 +225,7 @@ function getPropertyValue(key) {
 }
 
 /*
-** Set property value by key
+* Set property value by key
 */
 function setNewProperty(key, value) {
   value = JSON.stringify(value);
@@ -290,13 +234,16 @@ function setNewProperty(key, value) {
 }
 
 /*
-** Remove property by key
+* Remove property by key
 */
 function removeProperty(key) {
   var documentProperties = PropertiesService.getDocumentProperties();
   documentProperties.deleteProperty(key);
 }
 
+/*
+* Remove all tags from current document 
+*/
 function removeAllTags() {
   removeAllNamedRanges();
   removeAllProperties();
