@@ -30,6 +30,7 @@ function insertDocumentStructure(type) {
     // if insert in place of cursor
     var cursor = doc.getCursor();
     if (cursor) {
+      
       generateStructure(type, cursor);
     } else {
       DocumentApp.getUi().alert('Cannot find a cursor.');

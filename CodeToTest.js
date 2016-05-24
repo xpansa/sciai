@@ -16,6 +16,8 @@ function getAllTags() {
 
 function getNamedRangeText(id) {
   var namedRange = getNamedRangeById(id);
+  if(!namedRange)
+    return false;
   var elements = namedRange.getRange().getRangeElements();
   
   var content = "";
@@ -67,8 +69,9 @@ function createNewTag(type, id) {
   }
 }
 
-
-
+/*
+* Highlight a newly created NamedRange 
+*/
 function highlightNamedRange(id, type) {
   Logger.log(type);
   var namedRange = getNamedRangeById(id);
@@ -234,7 +237,8 @@ function printAllPropertiesToConsole() {
 ** Print all properties to console (useful for testing)
 */
 function printAllNamedRangesToConsole() {
-  var doc = DocumentApp.getActiveDocument();
+  //var doc = DocumentApp.getActiveDocument();
+  var doc = DocumentApp.openById('1iUaTVEl3LX3WMQCMeRmE3E-W27EY_ugCcxEi8yCAmKA');
   var namedRanges = doc.getNamedRanges();
   for (var key in namedRanges) {
     Logger.log('Key: %s, Value: %s', key, namedRanges[key].getId());
@@ -291,4 +295,9 @@ function setNewProperty(key, value) {
 function removeProperty(key) {
   var documentProperties = PropertiesService.getDocumentProperties();
   documentProperties.deleteProperty(key);
+}
+
+function removeAllTags() {
+  removeAllNamedRanges();
+  removeAllProperties();
 }

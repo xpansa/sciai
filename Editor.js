@@ -66,6 +66,9 @@ function generateStructure(type, cursor) {
   var body = doc.getBody();
   var structureElements = getStructure(type);
   var element = cursor.getElement();
+  if(element.getType() == DocumentApp.ElementType.TEXT) {
+    element = element.getParent();
+  }
   if (element) {
     for(var i = 0; i < structureElements.length; i++) {
       var section = structureElements[i];

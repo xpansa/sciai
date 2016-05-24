@@ -37,11 +37,28 @@ $(function() {
 	$('#export-pdf').click(exportPdf);
 	$('#export-sci').click(exportSci);
 	$('#update-tags').click(updateTags);
+    $('#remove-all').click(removeAllTags);
 	/***** END OF BIND ACTIONS TO ALL BUTTONS *****/
 
 });
 
 /***** FUNCTIONS *****/
+
+function removeAllTags() {
+    google.script.run
+		.withSuccessHandler(
+			function(tags, element) {
+				element.disabled = false;
+                updateTags();
+			})
+		.withFailureHandler(
+			function(msg, element) {
+				showError(msg, $('#button-bar'));
+				element.disabled = false;
+			})
+		.withUserObject(this)
+		.removeAllTags();
+}
 /*
  * Update list of existing tags in the document
  */

@@ -15,14 +15,14 @@ function getStyles(type) {
   var styles = {};
   // styles for terms
   styles.term = {};
-  styles.term[DocumentApp.Attribute.BACKGROUND_COLOR] = '#FFF8E1'; 
+  styles.term[DocumentApp.Attribute.BACKGROUND_COLOR] = '#b6d7a8'; 
   // styles for sections
   styles.section = {};
   styles.section[DocumentApp.Attribute.FONT_SIZE] = 9; 
   styles.section[DocumentApp.Attribute.FOREGROUND_COLOR] = '#757575';
   // styles for custom tags
   styles.custom = {};
-  styles.custom[DocumentApp.Attribute.BACKGROUND_COLOR] = '#EEEEEE';
+  styles.custom[DocumentApp.Attribute.BACKGROUND_COLOR] = '#FFEB3B';
   // default styles (can be used when necessary to remove highlighting
   styles.none = {};
   styles.none[DocumentApp.Attribute.FOREGROUND_COLOR] = '#000000'; 
