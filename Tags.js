@@ -186,7 +186,7 @@ function printAllPropertiesToConsole() {
 */
 function printAllNamedRangesToConsole() {
   //var doc = DocumentApp.getActiveDocument();
-  var doc = DocumentApp.openById('1iUaTVEl3LX3WMQCMeRmE3E-W27EY_ugCcxEi8yCAmKA');
+  var doc = DocumentApp.getActiveDocument;
   var namedRanges = doc.getNamedRanges();
   for (var key in namedRanges) {
     Logger.log('Key: %s, Value: %s', key, namedRanges[key].getId());
@@ -201,17 +201,6 @@ function removeAllNamedRanges() {
   var nr = doc.getNamedRanges();
   for(var j = 0; j < nr.length; j++) {
     nr[j].remove();
-  }
-}
-
-/*
-* Get all NamedRanges
-*/
-function getAllNamedRanges() {
-  var doc = DocumentApp.getActiveDocument();
-  var nr = doc.getNamedRanges();
-  for(var j = 0; j < nr.length; j++) {
-    Logger.log(nr[j].getId());
   }
 }
 
