@@ -1,0 +1,26 @@
+Project mission and summary.
+
+Our mission is to develop an application that will help to create semantic biomedical texts directly at the moment of writing by means of maching-learning and artificial intelligence algorithms. This results in a reusable reproducible machine- and human-readable papers.
+ 
+"How to Get Involved".
+Sci.AI is an open source project. Everyone is more than welcome to test it out and contribute. Visit our website sci.ai. We particularly need researchers with annotation or OpenBEL expertise at this time. Specifically, for our next steps, we need:
+1. A web developer with Chrome extensions development experience.
+2. A bioinformatician with OpenBEL using experience.
+3. A text post-processing engine specialist with experience integrating existing text with mining platforms like Content Mine.
+4. A JS developer.
+5. An NLP data scientist.
+6. A bio ontologies specialist.
+ 
+ Milestones.
+Short term goals:
+1.   Write articles with scientists to test current version.
+2.   Adding new features (such as a Chrome plugin that allows to see details about highlighted parts of articles, an option to remove tagging, a post-writing article processing, a server side biological objects relationships identification and etc).
+3.   Integration with Wikipedia (all information will be available by click on highlighted parts of article).
+Medium term goals:
+4.   Improve user interface according to the feedback.
+5. Embedding of the OpenBEL language.
+
+Long term goals:
+6. Collaboration with publishers and peer reviewers (shorten publishing delays, adopting publisher requirements, achieve acceptance by global journals).
+7.   Development of automatic detail analysis (such as terms linking, determination of interactions, relationships and pathways).
+8.   Instant data availability platform.
