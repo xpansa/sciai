@@ -1,0 +1,24 @@
+{
+	"manifest_version": 2,
+	"name": "SciChrome",
+	"version": "0.1",
+	"description": "Word count statusbar for Google Docs!",
+	"background" : { "scripts": ["background.js"] },
+	"page_action" :
+	{
+		"default_icon" : "icon.png",
+		"default_title" : "GDWC statusbar is active"
+	},
+	"content_scripts": [
+	{
+		"matches": ["https://docs.google.com/document/*"],
+		"js": ["jq.js", "main.js"],
+		"run_at": "document_idle"
+	}
+	],
+	"icons": {
+		"48": "icon48.png",
+		"128": "icon128.png"
+	},
+	"web_accessible_resources": ["statusbar.html"]
+}
