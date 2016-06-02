@@ -59,7 +59,7 @@ function exportSci() {
   var articleFolder = getFileFolder(doc);
   // if file exists - remove old version
   if (isFileExists(filename, articleFolder)) {
-    Logger.log('Remove ' + filename + ' from ' + articleFolder + ' folder');
+    // logger.log('Remove ' + filename + ' from ' + articleFolder + ' folder');
     isFileExists(filename, articleFolder).setTrashed(true);
   }
   
@@ -75,7 +75,7 @@ function exportSci() {
   content = DocumentApp.openById(copyId).getBody().getText();
   // if file exists - remove old version
   if (isFileExists(filename, articleFolder)) {
-    Logger.log('Remove ' + filename + ' from ' + articleFolder + ' folder');
+    // logger.log('Remove ' + filename + ' from ' + articleFolder + ' folder');
     isFileExists(filename, articleFolder).setTrashed(true);
   }
   
@@ -138,7 +138,7 @@ function insertTags(docId) {
     }
     
     var text = firstElement.getElement().editAsText();
-    Logger.log(typeof propertyValue.dataId);
+    // logger.log(typeof propertyValue.dataId);
     if (firstElement.isPartial()) {
       var str = text.getText().substr(firstElement.getStartOffset(), 
                                       firstElement.getEndOffsetInclusive() - firstElement.getStartOffset() + 1);
@@ -196,7 +196,7 @@ function exportPdf() {
   var articleFolder = getFileFolder(doc);
   if (isFileExists(fileName, articleFolder)) {
     // remove old verstion of file
-    Logger.log('Remove ' + fileName + ' from ' + articleFolder + ' folder');
+    // logger.log('Remove ' + fileName + ' from ' + articleFolder + ' folder');
     isFileExists(fileName, articleFolder).setTrashed(true);
   }
   
@@ -233,7 +233,7 @@ function makeClearCopy(doc, fileName) {
   var articleFolder = getFileFolder(doc);
   if (isFileExists(fileName, articleFolder)) {
     // remove old verstion of file
-    Logger.log('Remove ' + fileName + ' from ' + articleFolder + ' folder');
+    // logger.log('Remove ' + fileName + ' from ' + articleFolder + ' folder');
     isFileExists(fileName, articleFolder).setTrashed(true);
   }
   
@@ -268,6 +268,7 @@ function isFileExists(file, folder) {
 * Export to DOCX format
 */
 function exportDocx() {
+  Logger.log('export');
   var doc = DocumentApp.getActiveDocument();
   var clearFileName = doc.getName() + '_clear';
   var fileName = doc.getName() + '_docx';
@@ -275,7 +276,7 @@ function exportDocx() {
   var articleFolder = getFileFolder(doc);
   if (isFileExists(fileName, articleFolder)) {
     // remove old verstion of file
-    Logger.log('Remove ' + fileName + ' from ' + articleFolder + ' folder');
+    // logger.log('Remove ' + fileName + ' from ' + articleFolder + ' folder');
     isFileExists(fileName, articleFolder).setTrashed(true);
   }
   

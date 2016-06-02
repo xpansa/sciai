@@ -74,25 +74,25 @@ function generateStructure(type, cursor) {
       var section = structureElements[i];
       // open section tag
       var elementIndex = body.getChildIndex(element);
-      Logger.log(elementIndex);
+      // logger.log(elementIndex);
       var element = body.insertParagraph(0, "← Start of the " + section + " →");
       element.removeFromParent();
       element = body.insertParagraph(elementIndex+1, element).setAttributes(getStyles('section'));
       // empty line for section content
       elementIndex = body.getChildIndex(element);
-      Logger.log(elementIndex);
+      // logger.log(elementIndex);
       element = body.insertParagraph(0, "\n\n\n");
       element.removeFromParent();
       element = body.insertParagraph(elementIndex+1, element);
       //close section tag
       elementIndex = body.getChildIndex(element);
-      Logger.log(elementIndex);
+      // logger.log(elementIndex);
       element = body.insertParagraph(0, "← End of the " + section + " →");
       element.removeFromParent();
       element = body.insertParagraph(elementIndex+1, element).setAttributes(getStyles('section'));
       // empty line between sections
       elementIndex = body.getChildIndex(element);
-      Logger.log(elementIndex);
+      // logger.log(elementIndex);
       element = body.insertParagraph(0, "");
       element.removeFromParent();
       element = body.insertParagraph(elementIndex+1, element);

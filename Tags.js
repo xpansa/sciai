@@ -6,7 +6,7 @@ function getAllTags() {
   var data = documentProperties.getProperties();
   var results = [];
   for (var key in data) {
-    Logger.log('Key: %s, Value: %s', key, data[key]);
+    // logger.log('Key: %s, Value: %s', key, data[key]);
     var obj = JSON.parse(data[key]);
     obj.text = getNamedRangeText(obj.namedRangeId);
     results.push(obj);
@@ -76,10 +76,10 @@ function createNewTag(type, id) {
 * Highlight a newly created NamedRange 
 */
 function highlightNamedRange(id, type) {
-  Logger.log(type);
+  // logger.log(type);
   var namedRange = getNamedRangeById(id);
   if (!namedRange) {
-    Logger.log('NamedRange not found');
+    // logger.log('NamedRange not found');
     return;
   }
   
@@ -114,10 +114,10 @@ function getNamedRangeById(rangeId) {
   var doc = DocumentApp.getActiveDocument();
   var named = doc.getNamedRangeById(rangeId);
   if (named) {
-    Logger.log('Found named range');
+    // logger.log('Found named range');
     return named;  
   } else {
-    Logger.log("Named range with id = " + rangeId + " not found!");
+    // logger.log("Named range with id = " + rangeId + " not found!");
     return false;
   }
 }
@@ -163,7 +163,7 @@ function formPropertyContent(namedRangeId, type, dataId) {
 * @param {Range} elements The elements to be added into a new NamedRange
 */
 function createRange(name, elements) {
-  Logger.log('Creating a new range with the name ' + name);
+  // logger.log('Creating a new range with the name ' + name);
   var doc = DocumentApp.getActiveDocument();
   var rangeBuilder = doc.newRange();
   rangeBuilder.addRange(elements);
@@ -177,7 +177,7 @@ function printAllPropertiesToConsole() {
   var documentProperties = PropertiesService.getDocumentProperties();
   var data = documentProperties.getProperties();
   for (var key in data) {
-    Logger.log('Key: %s, Value: %s', key, data[key]);
+    logger.log('Key: %s, Value: %s', key, data[key]);
   }
 }
 
@@ -186,10 +186,10 @@ function printAllPropertiesToConsole() {
 */
 function printAllNamedRangesToConsole() {
   //var doc = DocumentApp.getActiveDocument();
-  var doc = DocumentApp.openById('1iUaTVEl3LX3WMQCMeRmE3E-W27EY_ugCcxEi8yCAmKA');
+  var doc = DocumentApp.getActiveDocument;
   var namedRanges = doc.getNamedRanges();
   for (var key in namedRanges) {
-    Logger.log('Key: %s, Value: %s', key, namedRanges[key].getId());
+    // logger.log('Key: %s, Value: %s', key, namedRanges[key].getId());
   }
 }
 
@@ -201,17 +201,6 @@ function removeAllNamedRanges() {
   var nr = doc.getNamedRanges();
   for(var j = 0; j < nr.length; j++) {
     nr[j].remove();
-  }
-}
-
-/*
-* Get all NamedRanges
-*/
-function getAllNamedRanges() {
-  var doc = DocumentApp.getActiveDocument();
-  var nr = doc.getNamedRanges();
-  for(var j = 0; j < nr.length; j++) {
-    Logger.log(nr[j].getId());
   }
 }
 

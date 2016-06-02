@@ -1,3 +1,11 @@
+function tttest() {
+  return 'hello';
+}
+
+function doGet() {
+  var doc = DocumentApp.openById('1iUaTVEl3LX3WMQCMeRmE3E-W27EY_ugCcxEi8yCAmKA');
+  return ContentService.createTextOutput(doc.getName());
+}
 /* 
 ** Test function, can be used as example
 */
@@ -6,9 +14,9 @@ function unusedInsertTags() {
   var documentProperties = PropertiesService.getDocumentProperties();
   var data = documentProperties.getProperties();
   for (var key in data) {
-    Logger.log('Key: %s, Value: %s', key, data[key]);
+    // logger.log('Key: %s, Value: %s', key, data[key]);
     var propertyValue = JSON.parse(data[key]);
-    Logger.log(typeof propertyValue);
+    // logger.log(typeof propertyValue);
     var namedRange = getNamedRangeById(key);
     // if not found - skip iteration
     if(!namedRange)
@@ -67,7 +75,7 @@ function checkIfRangeExists(rangeName) {
 * Merge two NamedRanges
 */
 function appendRange(rangeName, rangeToAppend) {
-  Logger.log('Append a new range into range with the name ' + rangeName);
+  // logger.log('Append a new range into range with the name ' + rangeName);
   var doc = DocumentApp.getActiveDocument();
   var body = doc.getBody();
   var rangeBuilder = doc.newRange();
@@ -81,7 +89,7 @@ function appendRange(rangeName, rangeToAppend) {
   }
   
   // remove original old range
-  Logger.log("Remove original range...");
+  // logger.log("Remove original range...");
   removeRanges([originalRange]);
   
   return doc.addNamedRange(rangeName, rangeBuilder.build()); 
@@ -92,21 +100,21 @@ function appendRange(rangeName, rangeToAppend) {
 * element - element ot add into range 
 */
 function addElementIntoNamedRange(rangeName, element) {
-  Logger.log('Adding a new element into range with the name ' + rangeName);
+  // logger.log('Adding a new element into range with the name ' + rangeName);
   var doc = DocumentApp.getActiveDocument();
   var body = doc.getBody();
   var rangeBuilder = doc.newRange();
   
   var namedRangeId = getNamedRangeByName(rangeName);
   if (namedRangeId) {
-    Logger.log("Old ID = " + namedRangeId);
+    // logger.log("Old ID = " + namedRangeId);
     
     // ! TODO: replace with addRange() function
     var elements = getRangeElementsFromNamedRange(namedRangeId);
-    Logger.log("Getting elements from old range...");
+    // logger.log("Getting elements from old range...");
     
     // remove old namedRange
-    Logger.log("Removing old range...");
+    // logger.log("Removing old range...");
     removeRanges([getNamedRangeById(namedRangeId)]);
     
     // create a new one
@@ -139,7 +147,7 @@ function getRangeElementsFromNamedRange(rangeId) {
 * UNUSED FUNCTION
 */
 function runTesting(type) {
-  Logger.log('Running testing for term = ' + type);
+  // logger.log('Running testing for term = ' + type);
   var namedRangeId = getNamedRangeByName(type);
   var namedRange = getNamedRangeById(namedRangeId);
   var elements = getRangeElementsFromNamedRange(namedRangeId);
@@ -172,30 +180,30 @@ function addTextWithNamedRange(str, name) {
 /* Remove ranges from the current doc */
 /* TODO: remove by id, single or multiple objects */
 function removeRanges(ranges) {
-  Logger.log("Remove " + ranges.length + " ranges");
-  Logger.log(typeof(ranges));
-  Logger.log(ranges);
+  // logger.log("Remove " + ranges.length + " ranges");
+  // logger.log(typeof(ranges));
+  // logger.log(ranges);
   for(r in ranges) {
-    //Logger.log(ranges[r].getId());
+    //// logger.log(ranges[r].getId());
     ranges[r].remove();
   }
-  Logger.log('Check if we remove all namedRanges');
+  // logger.log('Check if we remove all namedRanges');
   var doc = DocumentApp.getActiveDocument();
   var namedRanges = doc.getNamedRanges('gene');
-  Logger.log(namedRanges);
+  // logger.log(namedRanges);
 }
 
 /* 
 ** Get NamedRange by the name (name not necessary unique) 
 */
 function getNamedRangeByName(rangeName) { 
-  Logger.log("Search for named range with the name = " + rangeName);
+  // logger.log("Search for named range with the name = " + rangeName);
   var doc = DocumentApp.getActiveDocument();
   var namedRanges = doc.getNamedRanges(rangeName);
-  Logger.log(namedRanges);
+  // logger.log(namedRanges);
   if(namedRanges.length > 1) {
     removeRanges(namedRanges);
-    Logger.log("Something gones wrong. Length of array with namedRanges > 1");
+    // logger.log("Something gones wrong. Length of array with namedRanges > 1");
     return false;
   } else {
     var namedRangeId = namedRanges[0].getId();
@@ -212,7 +220,7 @@ function getNamedRangeByName(rangeName) {
 *
 */
 function highlightText(type) {
-  Logger.log("Highlight text with type = " + type);
+  // logger.log("Highlight text with type = " + type);
   var selection = DocumentApp.getActiveDocument().getSelection();
   // do anything only if user select some text
   if (selection) {
@@ -221,7 +229,7 @@ function highlightText(type) {
     // array with the elements from selected content
     var elements = selection.getRangeElements();
     
-    Logger.log("Number of elements: " + elements.length);
+    // logger.log("Number of elements: " + elements.length);
     
     for (var i = 0; i < elements.length; i++) {
       var element = elements[i];
@@ -234,15 +242,15 @@ function highlightText(type) {
         
         if (checkIfRangeExists(type)) {
           // if necessary range exists then just append a new range
-          Logger.log("Existing range");
+          // logger.log("Existing range");
           appendRange(type, selection);
         } else {
           // else create a new range
-          Logger.log("Creating a new range");
+          // logger.log("Creating a new range");
           createRange(type, selection);
         }
         
-        Logger.log('We should highlight selected text');
+        // logger.log('We should highlight selected text');
         
         if (element.getElement().editAsText) {
           var text = element.getElement().editAsText();
@@ -276,38 +284,38 @@ function getTags() {
 function test1() {
   var tags = getTags();
   if(tags.length % 2) {
-    Logger.log('Not even number of tags');
+    // logger.log('Not even number of tags');
     return false;
   }
   var opened = [];
   var openedTags = [];
   for(var i = 0; i < tags.length - 1; i++) {
-    Logger.log(opened);
+    // logger.log(opened);
     var previousTag = (i > 0) ? getTextFromRangeElement(tags[i-1]) : '';
     var currentTag = getTextFromRangeElement(tags[i]);
     var nextTag = getTextFromRangeElement(tags[i+1]);
-    Logger.log('Current ' + currentTag);
-    Logger.log('Next ' + nextTag);
+    // logger.log('Current ' + currentTag);
+    // logger.log('Next ' + nextTag);
     if(compareTags(currentTag, nextTag) && !isClosingTag(currentTag) && isClosingTag(nextTag)) {
-      Logger.log('Tags equal');
+      // logger.log('Tags equal');
       continue;
     } 
     else {
       // if current tag is closing
       if(isClosingTag(currentTag)) {
-        Logger.log('Current tag is closing tag');
+        // logger.log('Current tag is closing tag');
         if(compareTags(currentTag, previousTag)) {
-          Logger.log('Prev and Current elements equal. Ok.');
+          // logger.log('Prev and Current elements equal. Ok.');
         }
         else {
           var index = opened.lastIndexOf(getClearTag(currentTag));
           if(index > -1) {
             opened.splice(index, 1);
             openedTags.splice(index, 1);
-            Logger.log('Found result in opened array');
+            // logger.log('Found result in opened array');
             continue;
           } else {
-            Logger.log('Not found results in opened array. Error!');
+            // logger.log('Not found results in opened array. Error!');
             tags[i].getElement().setAttributes(getStyles('term'));
             break;
           }
@@ -315,7 +323,7 @@ function test1() {
       } 
       // if current tag is not closing
       else {
-        Logger.log('Current tag is not closing tag');
+        // logger.log('Current tag is not closing tag');
         openedTags.push(tags[i]);
         opened.push(getClearTag(currentTag));
       }
@@ -323,13 +331,13 @@ function test1() {
     
   }
   if(openedTags.length > 0) {
-    Logger.log('Un-closed opening tags');
-    Logger.log(openedTags);
+    // logger.log('Un-closed opening tags');
+    // logger.log(openedTags);
     for(var i = 0; i < openedTags.length; i++) {
       openedTags[i].getElement().setAttributes(getStyles('gene'));
     }
   } else {
-    Logger.log('It is fully okay');
+    // logger.log('It is fully okay');
   }
 }
 
@@ -345,13 +353,13 @@ function testSyntax() {
   var tags = [];
   
   while(nextRangeElement) {
-    Logger.log('----------------------------------');
-    Logger.log('Next ' + getTextFromRangeElement(nextRangeElement));
-    Logger.log('Current ' + getTextFromRangeElement(currentRangeElement));
+    // logger.log('----------------------------------');
+    // logger.log('Next ' + getTextFromRangeElement(nextRangeElement));
+    // logger.log('Current ' + getTextFromRangeElement(currentRangeElement));
     
     // compare two tags
     if(!(counter % 2)) {
-      Logger.log('Comparing...');
+      // logger.log('Comparing...');
       var currentTag = getTextFromRangeElement(currentRangeElement);
       var nextTag = getTextFromRangeElement(nextRangeElement);
       // if not equal - error
@@ -359,12 +367,12 @@ function testSyntax() {
         if(!isClosingTag(nextTag)) {
           tags.push(nextRangeElement);
         } else {
-          Logger.log('Tags not equal: ' + currentTag + ' - ' + nextTag);
+          // logger.log('Tags not equal: ' + currentTag + ' - ' + nextTag);
           nextRangeElement.getElement().setAttributes(getStyles('gene'));
         }
       }
       else {
-        Logger.log('It is okay');
+        // logger.log('It is okay');
       }
     }
     
@@ -376,7 +384,7 @@ function testSyntax() {
   
   // if tags number is not even - error
   if (!(counter % 2)) {
-    Logger.log('Non-expected tag!');
+    // logger.log('Non-expected tag!');
     currentRangeElement.getElement().setAttributes(getStyles('gene'));
   }
   
@@ -392,7 +400,7 @@ function compareTags(tag1, tag2) {
   var rx = /<\/*(\w+)\s*\w*.*?>/;
   var tagName1 = rx.exec(tag1);
   var tagName2 = rx.exec(tag2); 
-  Logger.log('Compare: ' + tag1 + ' and ' + tag2);
+  // logger.log('Compare: ' + tag1 + ' and ' + tag2);
   return (tagName1[1] == tagName2[1]);
 }
 

@@ -114,11 +114,11 @@ function searchPerson(name) {
     }
   }
   var url = orcidSearchUrlJs.buildUrl({ text: name});
-  Logger.log(url);
+  // logger.log(url);
   var response = UrlFetchApp.fetch(url, options);
   response = JSON.parse(response);
   
-  Logger.log(response);
+  // logger.log(response);
   return processPersons(response);
 }
 
@@ -129,7 +129,7 @@ function searchPerson(name) {
 * @param {JSON} personJson JSON received from Orcid API 
 */
 function processPersons(personsJson) {
-  //Logger.log(personsJson);
+  //// logger.log(personsJson);
   var persons = personsJson["orcid-search-results"]["orcid-search-result"];
   var processedPersons = [];
   for (var i = 0; i < persons.length; i++) {
@@ -157,7 +157,7 @@ function getOrcidGivenName(person) {
 * Getting ORCID family name for a person if presented
 */
 function getOrcidFamilyName(person) {
-  Logger.log(person);
+  // logger.log(person);
   var name = 'Noname';
   if(person["orcid-profile"]["orcid-bio"]["personal-details"] && person["orcid-profile"]["orcid-bio"]["personal-details"]["family-name"])
     name = person["orcid-profile"]["orcid-bio"]["personal-details"]["family-name"]["value"];
